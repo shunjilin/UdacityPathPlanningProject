@@ -93,8 +93,8 @@ A really helpful resource for doing this project and creating smooth trajectorie
     ```
 
 ## Path Planning
-# Trajectory Generation
-We first find out the car's state (x, y, yaw and velocity), either based on its localization data, or the last two points of the previous path. In order to generate a trajectory, we use three waypoints spaced 30m apart (transformed to local car coordinates) and interpolate a spline through these points. We the combine the previous path with the interpolated spline to get a new path that is 50 points, such that we are able to travel at our desired reference velocity.
+#### Trajectory Generation
+We first find out the car's state (x, y, yaw and velocity), either based on its localization data, or the last two points of the previous path. In order to generate a trajectory, we use three waypoints spaced 30m apart (transformed to local car coordinates) and interpolate a spline through these points. We the combine the previous path with the interpolated spline to get a new path that is 50 points, such that we are able to travel at our desired reference velocity. We also make sure to convert the points back to the global coordinates before feeding them to the controller.
 
-# Lane Changing Behavior
+#### Lane Changing Behavior
 The lane changing behavior is implemented by a few simple rules. First we start off at 0.0 velocity and in lane 1 (middle lane). As long as there are no cars in front of us, we increase our velocity at a constant rate so as minimize jerk. If there is a car in front of us (< 30m gap), we change lane conditioned on whether the lane to the right or left has a car in close proximity. If there are no cars to the left or right within 30m front and back we execute the lane change. We also try to go back to the middle lane whenever possible, as that maximizes our options for lane changing.
