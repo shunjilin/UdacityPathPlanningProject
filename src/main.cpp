@@ -133,7 +133,8 @@ int main() {
               double vy = sensor_fusion[i][4];
               double check_speed = sqrt(vx*vx + vy*vy);
               double check_car_s = sensor_fusion[i][5];
-              int min_gap = 30;
+              int min_gap_front = 30;
+              int min_gap_back = 15;
 
               // car is in my lane
               if (lane == car_lane)
@@ -141,7 +142,7 @@ int main() {
                   // if using previous points can project s value out in time
                   check_car_s+=((double)prev_size*.02*check_speed);
                   // check s values greater than mine and s gap (< 30m)
-                  if ((check_car_s > car_s) && ((check_car_s-car_s) < min_gap))
+                  if ((check_car_s > car_s) && ((check_car_s-car_s) < min_gap_front))
                   {
                       // Do some logic here, lower reference velocity so we dont
                       // crash into the car infront of us, could also flag to
@@ -151,11 +152,17 @@ int main() {
                   }
               }
               // check if car to right or left
-              else if (car_lane == (lane - 1) && abs(check_car_s-car_s) < min_gap) {
-                  car_to_left = true;
+              else if (car_lane == (lane - 1)) {
+                  if ((check_car_s > car_s && (check_car_s - car_s) < min_gap_front) ||
+                      (check_car_s < car_s && (car_s - check_car_s) < min_gap_back)) {
+                          car_to_left = true;
+                  }
               }
-              else if (car_lane == (lane + 1) && abs(check_car_s-car_s) < min_gap) {
-                  car_to_right = true;
+              else if (car_lane == (lane + 1)) {
+                  if ((check_car_s > car_s && (check_car_s - car_s) < min_gap_front) ||
+                      (check_car_s < car_s && (car_s - check_car_s) < min_gap_back)) {
+                      car_to_right = true;
+                  }
               }
           }
 
